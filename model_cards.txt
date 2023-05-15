@@ -1,0 +1,7 @@
+toxic 관련 classifier 정리
+
+
+affahrizain/roberta-base-finetuned-jigsaw-toxic : 정체 모를 학습
+GroNLP/hateBERT : reddit 보고 학습한 유명한 놈
+unitary/toxic-bert : toxic bert 
+mohsenfayyaz/toxicity-classifier : jigsaw unintended 에 학습된 자식
