@@ -10,7 +10,7 @@ def get_parser():
 
     parser.add_argument(
         "--model_card",
-        default='affahrizain/roberta-base-finetuned-jigsaw-toxic',
+        default='bert-base-uncased',
         type=str,
         help="the name of pretrained model card"
     )
@@ -85,7 +85,7 @@ def finetune_classifier_on_jigsaw(train_data, args):
     train_dataset = ToxicDataset(train_encodings, train_data['toxicity'].tolist())
 
     # Load pre-trained model
-    model = AutoModelForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
+    model = AutoModelForSequenceClassification.from_pretrained(args.model_card, num_labels=2)
 
     # Define training arguments
     training_args = TrainingArguments(
