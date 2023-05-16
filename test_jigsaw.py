@@ -3,8 +3,10 @@ import torch
 import os
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from tqdm import tqdm
+from sklearn.metrics import roc_auc_score
 import argparse
-
+import numpy as np
+import torch.nn.functional as F
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -52,6 +54,7 @@ def test_classifier_on_jigsaw(args):
 
     # Initialize variables
     predictions = []
+    probs = []
     num_batches = len(encodings.input_ids) // batch_size + int(len(encodings.input_ids) % batch_size > 0)
 
     # Process batches
@@ -69,7 +72,10 @@ def test_classifier_on_jigsaw(args):
 
         # Get predicted class
         batch_predictions = torch.argmax(logits, dim=-1)
+        batch_probs = F.softmax(logits, dim=-1)
+
         predictions.extend(batch_predictions.cpu().numpy())
+        probs.extend(batch_probs[:, 1].cpu().numpy())
 
 
     # Convert predictions to tensor
@@ -80,6 +86,10 @@ def test_classifier_on_jigsaw(args):
     # Calculate accuracy
     accuracy = (predictions == torch.Tensor(data['toxicity'].tolist()[:len(predictions)])).float().mean().item()
     print(f'Accuracy: {accuracy}')
+
+    # Calculate AUROC
+    auroc = roc_auc_score(np.asarray(data['toxicity'].tolist()[:len(predictions)]), probs)
+    print(f'AUROC: {auroc}')
 
 if __name__ == '__main__':
     parser = get_parser()

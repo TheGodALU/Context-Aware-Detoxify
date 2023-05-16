@@ -90,8 +90,8 @@ def finetune_classifier_on_jigsaw(train_data, args):
     # Define training arguments
     training_args = TrainingArguments(
         output_dir=args.output_dir,          
-        num_train_epochs=3,              
-        per_device_train_batch_size=256,  
+        num_train_epochs=1,              
+        per_device_train_batch_size=64,  
         per_device_eval_batch_size=64,   
         warmup_steps=500,                
         weight_decay=0.01,               
